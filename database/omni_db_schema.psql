@@ -203,19 +203,26 @@ create table if not exists PropertyHistory (
 	Protocol Protocol			/* Protocol plus PropertyID uniquely identify a property */
 	, PropertyID integer			/* signed 32-bit */
 	, Issuer varchar(64) not null		/* Address that created it */
+	, TxType integer null default 0 /* Transaction type, 50, 51 etc. */
 	, Ecosystem Ecosystem not null		/* Production or Test (for now) */
 	, TxHash varchar(64) not null		/*the tx that performed the action */
 	, TxDBSerialNum int8 unique not null	/* db internal identifier for each tx, for faster joins */
-	, TxBlockTime timestamp(0) null		/* to identify the  action on a particular property */
-	, PropertyName varchar(256) null
 	, PropertyType smallint null		
 	, PrevPropertyID integer null default 0
-	, PropertyURL varchar(256) null
-	, NumberOfTokens numeric(19) null	/* for a tx50 */
-	, PropertyData varchar(256) null
-	, CrowdsaleDeadline timestamp(0) null
+	, PropertyName varchar(256) null
 	, PropertyCategory varchar(256) null		/* see PropertyCategories - TBD */
 	, PropertySubcategory varchar(256) null		/* see PropertyCategories - TBD */
+	, PropertyData varchar(256) null
+	, PropertyURL varchar(256) null
+	, NumberOfTokens numeric(19) null	/* for a tx50 */
+	, TokensRaiseed numeric(19) null	/* for a tx51 */
+	, TokensIssued numeric(19) null	/* for a tx51 */
+	, EarlyBirdBonus integer null default 0	/* for a tx51 */
+	, IssuerPercent integer null default 0	/* for a tx51 */
+	, PropertyIDDesired integer null default 0
+	, CrowdsaleDeadline timestamp(0) null
+	, CrowdsaleActive integer null default 0 /* Is sale still open? */
+	, TxBlockTime timestamp(0) null		/* to identify the timestamp on a particular property */
 
 	, primary key (PropertyID, Protocol, PropertyName)
 	, foreign key (Issuer, Protocol, PropertyID) references AddressBalances (Address, Protocol, PropertyID)
